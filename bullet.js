@@ -9,7 +9,7 @@ class Bullet {
         this.image.src = "./images/weapons.png";
 
         this.posX = playerPosX + 20;
-        this.posY = playerPosY - 399;
+        this.posY = playerPosY;
 
         this.image.frames = 70;
         this.image.framesIndex = 0;
@@ -38,5 +38,5 @@ class Bullet {
             this.image.framesIndex = 0;
         }
     }
-    
+
 }

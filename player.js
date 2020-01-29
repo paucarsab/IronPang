@@ -4,8 +4,8 @@ class Player {
         this.gameWidth = gameW;
         this.gameHeight = gameH;
 
-        this.width = 81;
-        this.height = 99;
+        this.width = 68;
+        this.height = 82;
 
         this.image = new Image();
         this.image.src = "./images/player_back.png";
@@ -34,7 +34,6 @@ class Player {
             this.width,
             this.height
         );
-        // this.weapons.forEach(arrow => arrow.draw());
         this.clearBullet()
     }
     animatedBack(framesCounter) {
@@ -59,7 +58,7 @@ class Player {
             }
 
             if (e.keyCode === 37) {
-                this.keys.RIGHT = true;
+                this.keys.LEFT = true;
                 if (this.posX <= 0) {
                     this.posX = 0;
                 } else {
