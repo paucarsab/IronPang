@@ -37,7 +37,7 @@ class Player {
         this.clearBullet()
     }
     animatedBack(framesCounter) {
-        if (framesCounter % 30 == 0) {
+        if (framesCounter % 20 == 0) {
             this.image.framesIndex++;
         }
         if (this.image.framesIndex > this.image.frames - 1) {
@@ -46,6 +46,7 @@ class Player {
     }
     setListeners() {
         document.addEventListener("keydown", e => {
+            e.preventDefault();
             if (e.keyCode === 39) {
                 this.keys.RIGHT = true;
                 if (this.posX >= this.gameWidth - this.width) {
@@ -73,6 +74,7 @@ class Player {
             }
         })
         document.addEventListener("keyup", e => {
+            e.preventDefault();
             if (e.keyCode === 39) {
                 this.keys.RIGHT = false;
                 this.image.src = "./images/player_back.png";

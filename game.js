@@ -12,6 +12,7 @@ const game = {
     bubbles: [],
     pizzas: [],
     lives: 3,
+    collisionCounter: 0,
     isColliding: false,
     keys: {
         LEFT: false,
@@ -23,6 +24,12 @@ const game = {
         this.ctx = this.canvas.getContext("2d");
         this.setDimensions();
         scoreboard.init(this.ctx);
+        const music = new Howl({
+            src: ["./snd/victory.mp3"],
+            autoplay: true,
+            loop: true,
+            volume: 0.5
+        });
         this.start();
     },
     start() {
@@ -36,7 +43,11 @@ const game = {
             this.drawAll();
             this.moveAll();
             if (this.isCollisionPlayer()) {
-                console.log("tocando")
+                this.collisionCounter++;
+                if (this.collisionCounter > 20) {
+                    this.livesF();
+                    this.collisionCounter = 0;
+                }
             }
             this.isCollisionBullet()
             this.drawScore();
@@ -54,7 +65,8 @@ const game = {
         this.player.draw()
         this.bubbles.forEach(b => b.draw())
         this.hud.draw()
-        this.pizzas.forEach(p => p.draw())
+        this.pizza.forEach(p => p.draw())
+
     },
     moveAll() {
         this.player.animatedBack(this.framesCounter)
@@ -65,8 +77,9 @@ const game = {
         this.background = new Background(this.ctx, this.canvas.width, this.canvas.height);
         this.player = new Player(this.ctx, this.width, this.height, this.keys, this.width / 2, this.height - 161);
         this.bubbles = [new Bubble(this.ctx, randomInt(100, this.canvas.width * 0.5), this.canvas.height * 0.1, this.width, this.height, 1)]
-        this.pizza = [new Pizza(this.ctx, this.canvas.width * 0.5, this.canvas.height * 0.5)]
+        this.pizza = [new Pizza(this.ctx, 40, this.canvas.height - 75, "./images/pizza.png"), new Pizza(this.ctx, 110, this.canvas.height - 75, "./images/pizza.png"), new Pizza(this.ctx, 180, this.canvas.height - 75, "./images/pizza.png")]
         this.hud = new Hud(this.ctx, this.canvas.width, this.canvas.height);
+        this.gameover = new GameOver(this.ctx, 200, 120, this.canvas.width / 2 - 100, this.canvas.height / 2 - 60);
         this.scoreboard = scoreboard;
     },
     clear() {
@@ -84,15 +97,25 @@ const game = {
     drawScore() {
         this.scoreboard.update(this.score, this.width - 150, this.height - 20);
     },
-    lives() {
-        if (this.lives < 0) {
-            this.gameover()
-        } else {
+    livesF() {
+        if (this.lives >= 3) {
+            this.pizza[2] = new Pizza(this.ctx, 180, this.canvas.height - 75, "./images/pizza_clear.png")
             this.lives--
+        } else if (this.lives >= 2) {
+            this.pizza[1] = new Pizza(this.ctx, 110, this.canvas.height - 75, "./images/pizza_clear.png")
+            this.lives--
+        } else if (this.lives >= 1) {
+            this.pizza[0] = new Pizza(this.ctx, 40, this.canvas.height - 75, "./images/pizza_clear.png")
+            this.lives--
+        } else {
+            this.gameoverF()
         }
     },
-    gameover() {
+    gameoverF() {
+        this.gameover.draw()
+
         clearInterval(this.interval);
+
     },
     isCollisionBullet() {
         this.isColliding = false;
@@ -101,47 +124,31 @@ const game = {
                 if (bullet.posX <= bubble.posX + bubble.width &&
                     bullet.posY <= bubble.posY + bubble.height &&
                     bullet.posX + bullet.width >= bubble.posX) {
-                    console.log(bubbleIndex)
                     this.isColliding = true
                     this.player.bullets.splice(idx, 1);
                     if (bubbleIndex !== undefined) {
-
                         // type of ball check ==> .__proto__.constructor.name as in game.bubbles[0].__proto__.constructor.name ===> "BubbleC3"
                         if (game.bubbles.length > 0 && game.bubbles[bubbleIndex].__proto__.constructor.name === "Bubble") {
                             this.bubbles.splice(bubbleIndex, 1)[0]
                             setTimeout(() => {
-                                this.bubbles.push(new BubbleC3(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, 1), new BubbleC3(this.ctx, bubble.posX + 100, this.canvas.height * 0.1, this.width, this.height, 1))
+                                this.bubbles.push(new BubbleC3(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, 1), new BubbleC3(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, -1))
                                 this.score += 100;
-                                console.log(this.bubbles)
-
                             }, 100)
-                            console.log("Bola H5 Borrada!")
-                            console.log(bubbleIndex)
                         } else if (game.bubbles.length > 0 && game.bubbles[bubbleIndex].__proto__.constructor.name === "BubbleC3") {
                             this.bubbles.splice(bubbleIndex, 1)[0]
                             setTimeout(() => {
-                                this.bubbles.push(new BubbleJS(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, 1), new BubbleJS(this.ctx, bubble.posX + 100, this.canvas.height * 0.1, this.width, this.height, 1))
+                                this.bubbles.push(new BubbleJS(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, 1), new BubbleJS(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, -1))
                                 this.score += 200;
-                                console.log(bubbleIndex)
-
                             }, 100)
-                            console.log("Bola C3 Borrada!")
-                            console.log(this.bubbles)
-
                         } else if (game.bubbles.length > 0 && game.bubbles[bubbleIndex].__proto__.constructor.name === "BubbleJS") {
                             this.bubbles.splice(bubbleIndex, 1)[0]
                             this.score += 300;
-                            console.log("Bola JS Borrada!")
-                            console.log(bubbleIndex)
-
                         }
                     }
-
                 }
             })
         })
     },
-
 }
 
 

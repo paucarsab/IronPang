@@ -14,7 +14,7 @@ class Bubble {
         this.image.framesIndex = 0;
 
         this.dSpeedX = dSpeedX
-        this.velX = 2;
+        this.velX = 2 * dSpeedX;
         this.velY = .2;
         this.gravity = .2;
 
@@ -72,16 +72,16 @@ class Bubble {
     // }
 }
 class BubbleC3 extends Bubble {
-    constructor(ctx, posX, posY, gameW, gameH) {
-        super(ctx, posX, posY, gameW, gameH)
+    constructor(ctx, posX, posY, gameW, gameH, dSpeedX) {
+        super(ctx, posX, posY, gameW, gameH, dSpeedX)
         this.width = 125;
         this.height = 125;
         this.image.src = "./images/bubblec3.png"
     }
 }
 class BubbleJS extends Bubble {
-    constructor(ctx, posX, posY, gameW, gameH) {
-        super(ctx, posX, posY, gameW, gameH)
+    constructor(ctx, posX, posY, gameW, gameH, dSpeedX) {
+        super(ctx, posX, posY, gameW, gameH, dSpeedX)
         this.width = 50;
         this.height = 50;
         this.image.src = "./images/bubbleJS.png"

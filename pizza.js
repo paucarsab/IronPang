@@ -1,12 +1,11 @@
 class Pizza {
-    constructor(ctx, posX, posY) {
+    constructor(ctx, posX, posY, image) {
         this.ctx = ctx;
-        this.width = 100;
-        this.height = 100;
+        this.width = 70;
+        this.height = 70;
 
         this.image = new Image();
-        this.image.src = "./images/pizza.png";
-        this.image.onload;
+        this.image.src = image
 
         this.posX = posX;
         this.posY = posY;
