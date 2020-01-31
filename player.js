@@ -1,3 +1,4 @@
+
 class Player {
     constructor(ctx, gameW, gameH, keys, posX, posY) {
         this.ctx = ctx;
@@ -19,6 +20,13 @@ class Player {
 
         this.keys = keys;
         this.bullets = [];
+
+        this.bulletSnd = new Howl({
+            src: ["./snd/bullet-sound.mp3"],
+            autoplay: false,
+            loop: false,
+            volume: 0.5
+        });
 
         this.setListeners();
     }
@@ -93,6 +101,7 @@ class Player {
     shoot() {
         if (this.bullets.length < 3) {
             this.bullets.push(new Bullet(this.ctx, this.posX, this.posY))
+            this.bulletSnd.play()
         }
     }
     clearBullet() {

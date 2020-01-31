@@ -1,3 +1,13 @@
+/* font converted using font-converter.net. thank you! */
+@font-face {
+    font-family: "ComicKings";
+
+    src: url("./ttf/ComicKings.woff2") format("woff2");
+    /* Modern Browsers */
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -10,4 +20,32 @@ canvas {
     width: 90%;
     height: 90%;
     background-color: #2478b4;
+}
+
+.game {
+    display: none;
+}
+
+img {
+    width: 500px;
+}
+
+button {
+    font-family: "ComicKings";
+    font-size: 30px;
+    background-color: #dcb833;
+    color: #2e2c2e;
+    width: 300px;
+    padding: 10px 5px;
+    margin-top: 50px;
+    border: 5px solid #2e2c2e;
+    border-radius: 10px;
+    cursor: alias;
+}
+
+.intro {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
 }

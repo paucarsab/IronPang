@@ -14,9 +14,9 @@ class Bubble {
         this.image.framesIndex = 0;
 
         this.dSpeedX = dSpeedX
-        this.velX = 2 * dSpeedX;
-        this.velY = .2;
-        this.gravity = .2;
+        this.velX = 1.2 * dSpeedX;
+        this.velY = .1;
+        this.gravity = .1;
 
     }
     draw() {

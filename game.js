@@ -24,10 +24,28 @@ const game = {
         this.ctx = this.canvas.getContext("2d");
         this.setDimensions();
         scoreboard.init(this.ctx);
-        const music = new Howl({
-            src: ["./snd/victory.mp3"],
+        this.music = new Howl({
+            src: ["./snd/stage.mp3"],
             autoplay: true,
             loop: true,
+            volume: 0.5
+        });
+        this.bubbleSnd = new Howl({
+            src: ["./snd/bubble-sound.mp3"],
+            autoplay: false,
+            loop: false,
+            volume: 0.5
+        });
+        this.gameOverSnd = new Howl({
+            src: ["./snd/gameover-sound.mp3"],
+            autoplay: false,
+            loop: false,
+            volume: 0.5
+        });
+        this.victorySnd = new Howl({
+            src: ["./snd/victory.mp3"],
+            autoplay: false,
+            loop: false,
             volume: 0.5
         });
         this.start();
@@ -51,6 +69,7 @@ const game = {
             }
             this.isCollisionBullet()
             this.drawScore();
+            this.victoryF()
         }, 1000 / this.FPS)
     },
     setDimensions() {
@@ -66,12 +85,10 @@ const game = {
         this.bubbles.forEach(b => b.draw())
         this.hud.draw()
         this.pizza.forEach(p => p.draw())
-
     },
     moveAll() {
         this.player.animatedBack(this.framesCounter)
         this.bubbles.forEach(b => b.move())
-        // this.bubbles.forEach(b => b.changeDirection())
     },
     reset() {
         this.background = new Background(this.ctx, this.canvas.width, this.canvas.height);
@@ -80,6 +97,7 @@ const game = {
         this.pizza = [new Pizza(this.ctx, 40, this.canvas.height - 75, "./images/pizza.png"), new Pizza(this.ctx, 110, this.canvas.height - 75, "./images/pizza.png"), new Pizza(this.ctx, 180, this.canvas.height - 75, "./images/pizza.png")]
         this.hud = new Hud(this.ctx, this.canvas.width, this.canvas.height);
         this.gameover = new GameOver(this.ctx, 200, 120, this.canvas.width / 2 - 100, this.canvas.height / 2 - 60);
+        this.victory = new Victory(this.ctx, 400, 400, this.canvas.width / 2 - 200, this.canvas.height / 2 - 200);
         this.scoreboard = scoreboard;
     },
     clear() {
@@ -108,12 +126,13 @@ const game = {
             this.pizza[0] = new Pizza(this.ctx, 40, this.canvas.height - 75, "./images/pizza_clear.png")
             this.lives--
         } else {
+            this.gameOverSnd.play()
+            this.music.stop()
             this.gameoverF()
         }
     },
     gameoverF() {
         this.gameover.draw()
-
         clearInterval(this.interval);
 
     },
@@ -131,17 +150,20 @@ const game = {
                         if (game.bubbles.length > 0 && game.bubbles[bubbleIndex].__proto__.constructor.name === "Bubble") {
                             this.bubbles.splice(bubbleIndex, 1)[0]
                             setTimeout(() => {
+                                this.bubbleSnd.play()
                                 this.bubbles.push(new BubbleC3(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, 1), new BubbleC3(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, -1))
                                 this.score += 100;
                             }, 100)
                         } else if (game.bubbles.length > 0 && game.bubbles[bubbleIndex].__proto__.constructor.name === "BubbleC3") {
                             this.bubbles.splice(bubbleIndex, 1)[0]
                             setTimeout(() => {
+                                this.bubbleSnd.play()
                                 this.bubbles.push(new BubbleJS(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, 1), new BubbleJS(this.ctx, bubble.posX, this.canvas.height * 0.1, this.width, this.height, -1))
                                 this.score += 200;
                             }, 100)
                         } else if (game.bubbles.length > 0 && game.bubbles[bubbleIndex].__proto__.constructor.name === "BubbleJS") {
                             this.bubbles.splice(bubbleIndex, 1)[0]
+                            this.bubbleSnd.play()
                             this.score += 300;
                         }
                     }
@@ -149,6 +171,14 @@ const game = {
             })
         })
     },
+    victoryF() {
+        if (this.score >= 1600) {
+            this.victory.draw()
+            this.victorySnd.play()
+            this.music.stop()
+            clearInterval(this.interval);
+        }
+    }
 }
 
 

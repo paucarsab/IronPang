@@ -1,11 +1,11 @@
-class GameOver {
+class Victory {
     constructor(ctx, width, height, posX, posY) {
         this.ctx = ctx;
         this.width = width;
         this.height = height;
 
         this.image = new Image();
-        this.image.src = "./images/gameover.png"
+        this.image.src = "./images/victory.png"
 
         this.posX = posX;
         this.posY = posY;
